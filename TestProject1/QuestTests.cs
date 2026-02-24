@@ -16,14 +16,26 @@ namespace TestProject
         }
 
         [Fact]
-        public void Quest_Is_Completed_When_All_Objectives_Are_Finished()
+        public void Quest_Cannot_Be_Turned_In_Until_Objectives_Are_Completed()
+        {
+            var quest = new Quest("Goblin Slayer");
+            quest.AddObjective("Kill Goblins", 5);
+
+            quest.ProgressObjective("Kill Goblins", 3);
+
+            Assert.False(quest.TurnIn(out string message));
+        }
+
+        [Fact]
+        public void Quest_Cannot_Be_Turned_In_Repeatedly()
         {
             var quest = new Quest("Goblin Slayer");
             quest.AddObjective("Kill Goblins", 5);
 
             quest.ProgressObjective("Kill Goblins", 5);
+            quest.TurnIn(out string message);
 
-            Assert.True(quest.IsCompleted);
+            Assert.False(quest.TurnIn(out message));
         }
 
         [Fact]
@@ -69,5 +81,18 @@ namespace TestProject
                 Assert.True(true);
             }
         }
+
+
+        [Fact]
+        public void Quest_Is_Not_Completed_Until_Turned_In()
+        {
+            var quest = new Quest("Goblin Slayer");
+            quest.AddObjective("Kill Goblins", 5);
+
+            quest.ProgressObjective("Kill Goblins", 5);
+
+            Assert.False(quest.IsCompleted);
+        }
+
     }
 }

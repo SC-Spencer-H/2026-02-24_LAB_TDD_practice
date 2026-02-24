@@ -6,12 +6,15 @@ namespace QuestProgressTracker
     {
         private string Name { get; set; }
         public List<Objective> Objectives { get; set; } = new List<Objective>();
+        private bool TurnedIn { get; set; }
 
         public bool IsCompleted 
         { 
             get
             {
                 if (Objectives.Any(o => o.CurrentAmount != o.RequiredAmount))
+                    return false;
+                else if (TurnedIn == false)
                     return false;
                 else
                     return true;
@@ -49,6 +52,26 @@ namespace QuestProgressTracker
         public void ProgressObjective(string name, int amount)
         {
             GetObjective(name).IncrementCurrentAmount(amount);
+        }
+
+        public bool TurnIn(out string message)
+        {
+            if (Objectives.Any(o => o.CurrentAmount != o.RequiredAmount))
+            {
+                message = "Objectives not completed";
+                return false;
+            }
+            else if (TurnedIn == true)
+            {
+                message = "Quest already turned in";
+                return false;
+            }
+            else
+            {
+                TurnedIn = true;
+                message = "Quest turned in!";
+                return true;
+            }
         }
 
         public class ObjectiveNotFoundException : Exception { }
