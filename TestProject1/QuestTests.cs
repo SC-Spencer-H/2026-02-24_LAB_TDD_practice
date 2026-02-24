@@ -36,5 +36,38 @@ namespace TestProject
 
             Assert.Equal(5, quest.GetObjective("Kill Goblins").CurrentAmount);
         }
+
+        [Fact]
+        public void Exception_When_Incrementing_Nonexistent_Objective()
+        {
+            var quest = new Quest("Goblin Slayer");
+
+            try
+            {
+                quest.ProgressObjective("Kill Goblins", 5);
+                    Assert.True(false); 
+            }
+            catch (Quest.ObjectiveNotFoundException)
+            {
+                Assert.True(true);
+            }
+        }
+
+        [Fact]
+        public void Exception_When_Adding_Duplicate_Objective()
+        {
+            var quest = new Quest("Goblin Slayer");
+            quest.AddObjective("Kill Goblins", 5);
+
+            try
+            {
+                quest.AddObjective("Kill Goblins", 5);
+                    Assert.True(false);
+            }
+            catch (Quest.DuplicateObjectiveException)
+            {
+                Assert.True(true);
+            }
+        }
     }
 }

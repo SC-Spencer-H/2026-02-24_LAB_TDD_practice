@@ -1,29 +1,57 @@
-﻿namespace QuestProgressTracker
+﻿using System.Xml.Linq;
+
+namespace QuestProgressTracker
 {
     public class Quest
     {
-        private string v;
+        private string Name { get; set; }
+        public List<Objective> Objectives { get; set; } = new List<Objective>();
 
-        public Quest(string v)
-        {
-            this.v = v;
+        public bool IsCompleted 
+        { 
+            get
+            {
+                if (Objectives.Any(o => o.CurrentAmount != o.RequiredAmount))
+                    return false;
+                else
+                    return true;
+            } 
         }
 
-        public bool IsCompleted { get; set; }
-
-        public void AddObjective(string v1, int v2)
+        public Quest(string name)
         {
-            throw new NotImplementedException();
+            Name = name;
         }
 
-        public Objective GetObjective(string v)
+        public void AddObjective(string name, int requiredAmount)
         {
-            throw new NotImplementedException();
+            try
+            {
+                GetObjective(name);
+                    throw new DuplicateObjectiveException();
+            }
+            catch (ObjectiveNotFoundException)
+            {
+                Objectives.Add(new Objective(name, requiredAmount));
+            }
         }
 
-        public void ProgressObjective(string v1, int v2)
+        public Objective GetObjective(string name)
         {
-            throw new NotImplementedException();
+            Objective objective = Objectives.Find(o => o.Name == name);
+
+            if (objective == default(Objective))
+                throw new ObjectiveNotFoundException();
+            else
+                return objective;
         }
+
+        public void ProgressObjective(string name, int amount)
+        {
+            GetObjective(name).IncrementCurrentAmount(amount);
+        }
+
+        public class ObjectiveNotFoundException : Exception { }
+        public class DuplicateObjectiveException : Exception { }
     }
 }
