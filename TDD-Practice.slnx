@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="ConsoleApp5/QuestProgressTracker.csproj" />
+  <Project Path="TestProject1/TestProject.csproj" />
+</Solution>
