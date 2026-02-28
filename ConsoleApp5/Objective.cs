@@ -1,4 +1,6 @@
-﻿namespace QuestProgressTracker
+﻿using System;
+
+namespace QuestProgressTracker
 {
 
     public class Objective
@@ -15,8 +17,8 @@
 
         public void IncrementCurrentAmount(int amount)
         {
-            if (CurrentAmount + amount >= RequiredAmount)
-                CurrentAmount = RequiredAmount;
+            if (CurrentAmount + amount > RequiredAmount)
+                throw new InvalidOperationException();
             else
                 CurrentAmount += amount;
         }
